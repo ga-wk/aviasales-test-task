@@ -1,0 +1,45 @@
+.menu {
+    list-style-type: none;
+    display: flex;
+    min-width: 502px;
+    min-height: 50px;
+}
+
+.menu__item {
+    font-family: Open Sans;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 20px;
+    /* identical to box height, or 167% */
+    display: flex;
+    align-items: center;
+    text-align: center;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #4A4A4A;
+
+    border: 1px solid #DFE5EC;
+    box-sizing: border-box;
+    padding: 15px;
+
+    background: #FFFFFF;
+
+    cursor: pointer;
+}
+
+.menu__item:first-child {
+    border-radius: 5px 0 0 5px;
+    border-right: none;
+}
+
+.menu__item:last-child {
+    border-radius: 0 5px 5px 0;
+    border-left: none;
+}
+
+.menu__item.active {
+    color: #FFFFFF;
+    border-color: #2196F3;
+    background: #2196F3;
+}

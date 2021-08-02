@@ -1,4 +1,5 @@
 import logo from '../../svg/logo.svg';
+import Tabs from '../tabs';
 import './index.css';
 
 function Main() {
@@ -8,17 +9,17 @@ function Main() {
         <img src={logo} className="main-logo" alt="logo" />
       </header>
       <main className="content">
-          <article className="results">
-              <header className="tabs">
+        <article className="content__results">
+          <header className="content__tabs">
+            <Tabs />
+          </header>
+          <section className="content__tickets">
 
-              </header>
-              <section className="tickets">
+          </section>
+        </article>
+        <aside className="content__filter">
 
-              </section>
-          </article>
-          <aside className="filter">
-            
-          </aside>
+        </aside>
       </main>
     </div>
   );
