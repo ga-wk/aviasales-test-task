@@ -3,6 +3,7 @@ import { mainConst } from '../../constants/main';
 import logo from '../../svg/logo.svg';
 import Filter from '../filter';
 import Tabs from '../tabs';
+import Tickets from '../tickets';
 import './index.css';
 
 async function fetchDataGet(url, success, fail) {
@@ -16,8 +17,8 @@ async function fetchDataGet(url, success, fail) {
 }
 
 function Main() {
-  const [stops, setStops] = useState([2, 3, 4]);
-  const [tab, setTab] = useState(0);
+  const [stops, setStops] = useState([3, 4]);
+  const [tab, setTab] = useState(1);
 
   const [searchId, setSearchId] = useState(undefined);
   const [tickets, setTickets] = useState([]);
@@ -36,7 +37,6 @@ function Main() {
   useEffect(() => {
     if (searchId) {
       fetchDataGet(mainConst.getTickets + `?searchId=${searchId}`, (data) => {
-        console.log(data);
         if (data) {
           setTickets(state => state.concat(data["tickets"]));
           if (!data["stop"]) {
@@ -71,7 +71,7 @@ function Main() {
                     <Tabs currentTab={tab} setNewTab={setTab} />
                   </header>
                   <section className="content__tickets">
-                    {tab} {stops.toString()} {tickets.toString()}
+                    <Tickets currentTab={tab} currentStops={stops} dirtyTickets={tickets} />
                   </section>
                 </article>
               </main>
