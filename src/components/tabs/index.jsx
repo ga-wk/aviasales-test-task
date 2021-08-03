@@ -2,23 +2,29 @@ import { useState } from 'react';
 import { tabsConst } from '../../constants/tabs';
 import './index.css';
 
-function Tabs() {
-  const [active, setActive] = useState(0);
+function Tabs({ currentTab, setNewTab }) {
+  const [active, setActive] = useState(currentTab);
 
   function clickHandle(e) {
-    setActive(+e.currentTarget.attributes.num.value);
+    const numTab = +e.currentTarget.attributes.num.value;
+    setActive(numTab);
+    setNewTab(state => {
+      state = numTab;
+      return state
+    });
   }
 
   return (
     <menu className="menu">
       {tabsConst.tabs.map((tab, i) =>
-        <li
+        <button
           className={`${active === i ? "menu__item active" : "menu__item"}`}
           num={i}
           onClick={clickHandle}
+          key={i}
         >
           {tab}
-        </li>
+        </button>
       )}
     </menu>
   )
