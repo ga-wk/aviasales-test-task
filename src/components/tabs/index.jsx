@@ -5,6 +5,7 @@ import './index.css';
 function Tabs({ currentTab, setNewTab }) {
   const [active, setActive] = useState(currentTab);
 
+  // Sorting method selection function
   function clickHandle(e) {
     const numTab = +e.currentTarget.attributes.num.value;
     setActive(numTab);

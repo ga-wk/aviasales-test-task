@@ -5,10 +5,14 @@ import { useState } from 'react';
 function Filter({ currentStops, setNewStops }) {
 	const [stops, setStops] = useState(currentStops);
 
+	// Filter item selection function
 	function clickHandle(e) {
 		const numStops = +e.currentTarget.attributes.num.value;
 		let tmpStops = stops.slice();
+
 		if (numStops === 0) {
+			// If the item "Все" is active, then the rest of the items are also activated
+			// If the item "Все" is activated again, then the rest of the items will become inactive
 			if (~stops.indexOf(numStops)) {
 				tmpStops = [];
 			} else {
@@ -23,10 +27,10 @@ function Filter({ currentStops, setNewStops }) {
 		if (tmpStops.length === 4 && ~stops.indexOf(0)) {
 			tmpStops.splice(stops.indexOf(0), 1);
 		}
+
 		if (tmpStops.length === 4) {
 			tmpStops.push(0);
 		}
-
 
 		tmpStops = tmpStops.sort((a, b) => a - b);
 		setStops(tmpStops);

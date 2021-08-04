@@ -6,6 +6,12 @@ import Tabs from '../tabs';
 import Tickets from '../tickets';
 import './index.css';
 
+/**
+ * Function for sending a get request
+ * @param {String} url - Address "get" request
+ * @param {Function} success - Function to be called on success
+ * @param {Function} fail - Function to be called in case of failure
+ */
 async function fetchDataGet(url, success, fail) {
   try {
     const response = await fetch(url);
@@ -17,7 +23,8 @@ async function fetchDataGet(url, success, fail) {
 }
 
 function Main() {
-  console.log();
+  // Filter and sort parameters are stored in localStorage
+  // If they are not in localStorage, then the standard parameters are selected
   const [stops, setStops] = useState(localStorage.getItem('stops').split(",").map(n => +n) ?? [0, 1, 2, 3, 4]);
   const [tab, setTab] = useState(+localStorage.getItem('tabs') ?? 0);
 
@@ -29,7 +36,8 @@ function Main() {
 
 
   useEffect(() => {
-    fetchDataGet(mainConst.getSearchId, (data) => {
+    // Getting SearchId
+    fetchDataGet(mainConst.urlGetSearchId, (data) => {
       setSearchId(data["searchId"]);
     }, (error) => {
       setIsError(error);
@@ -38,7 +46,8 @@ function Main() {
 
   useEffect(() => {
     if (searchId) {
-      fetchDataGet(mainConst.getTickets + `?searchId=${searchId}`, (data) => {
+      // Receiving tickets
+      fetchDataGet(mainConst.urlGetTickets + `?searchId=${searchId}`, (data) => {
         if (data) {
           setTickets(state => state.concat(data["tickets"]));
           if (!data["stop"]) {

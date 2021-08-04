@@ -18,14 +18,14 @@ function Ticket({ ticket }) {
 	const tableRows = []
 
 	for (let i = 0; i < 2; i++) {
-		//Время туда-обратно
+		// Round trip time
 		const sdate = new Date(ticket.segments[i].date)
 		const sTime = getTime(sdate);
 		const fdate = new Date(Date.parse(sdate) + ticket.segments[i].duration * 60 * 1000);
 		const fTime = getTime(fdate);
 		originDestinationTime.push({ sTime, fTime })
 
-		//Время в пути
+		// Travel time
 		const minutes = ticket.segments[i].duration > 60 ?
 			ticket.segments[i].duration % 60 :
 			ticket.segments[i].duration;
@@ -41,7 +41,7 @@ function Ticket({ ticket }) {
 		const tTime = `${days > 0 ? days + "д" : ""} ${hours}ч ${minutes}м`;
 		travelTime.push(tTime);
 
-		//Пересадки
+		// Transplants
 		stop.push(ticketsConst.stops[ticket.segments[i].stops.length]);
 
 		tableRows.push(
@@ -84,6 +84,7 @@ function Tickets({ currentTab, currentStops, dirtyTickets }) {
 	const [position, setPosition] = useState(0);
 	const [ticketsEl, setTicketsEl] = useState([]);
 
+	// The function of adding tickets to the page
 	function addTickets(position, tickets) {
 		const ticketsEl = [];
 		for (let i = 0; i < 5; i++) {
@@ -103,6 +104,7 @@ function Tickets({ currentTab, currentStops, dirtyTickets }) {
 		}
 	}
 
+	// Ticket dropout function
 	const filterOut = useCallback((currentTab, currentStops, dirtyTickets) => {
 		function average(array) {
 			return array.reduce((a, b) => a + b) / array.length
@@ -112,9 +114,11 @@ function Tickets({ currentTab, currentStops, dirtyTickets }) {
 			return [Math.min.apply(null, arr), average(arr)]
 		}
 		
+		// Filtered first
 		let tickets = dirtyTickets
 			.filter(t => t.segments.every(s => ~currentStops.indexOf(s.stops.length + 1)));
 
+		// Then sorted
 		if (currentStops.length > 0) {
 			const allPrice = tickets.map(t => t.price);
 			const [ticketsPriceMin, ticketsPriceAverage] = getMinAndAverage(allPrice);

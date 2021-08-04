@@ -1,4 +1,4 @@
 export const mainConst = {
-    getSearchId: "https://front-test.beta.aviasales.ru/search",
-    getTickets:"https://front-test.beta.aviasales.ru/tickets"
+    urlGetSearchId: "https://front-test.beta.aviasales.ru/search",
+    urlGetTickets:"https://front-test.beta.aviasales.ru/tickets"
 }
