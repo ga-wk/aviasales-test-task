@@ -1,3 +1,7 @@
+## Тестовое задание от Aviasales
+Проект представляет из себя: список билетов, фильтры и сортировка.
+Для получения билетов было использовано API от Aviasales - https://github.com/KosyanMedia/test-tasks/blob/master/aviasales_frontend/server.md
+
 ## Available Scripts
 
 In the project directory, you can run:
