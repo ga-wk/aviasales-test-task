@@ -1,9 +1,10 @@
 import './index.css';
 import { ticketsConst } from '../../constants/tickets';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 function Ticket({ ticket }) {
 	if (!ticket) return <></>
+
 	function getTime(date) {
 		const hours = date.getHours();
 		const minutes = date.getMinutes();
@@ -80,56 +81,86 @@ function Ticket({ ticket }) {
 }
 
 function Tickets({ currentTab, currentStops, dirtyTickets }) {
-	const [position, setPosition] = useState(5);
-	const tickets = dirtyTickets.filter(t => ~currentStops.indexOf(t.segments[0].stops.length + 1) && ~currentStops.indexOf(t.segments[1].stops.length + 1))
-		.sort((a, b) => {
-			switch (currentTab) {
-				case 0:
-					return a.price - b.price;
-				case 1:
-					return a.segments[0].duration - b.segments[0].duration;
-				default:
-					break;
-			}
-		});
+	const [position, setPosition] = useState(0);
+	const [ticketsEl, setTicketsEl] = useState([]);
 
-	function addMoreTickets() {
+	function addTickets(position, tickets) {
 		const ticketsEl = [];
 		for (let i = 0; i < 5; i++) {
 			ticketsEl.push(
-				<li className="tickets-list__item" key={position + i}>
+				<li className="tickets-list__item" key={position + i + "lit"}>
 					<Ticket ticket={tickets[i]} />
 				</li>
 			);
 		}
 
-		setTicketsEl(state => state.concat(ticketsEl));
-
-		setPosition(state => state + 10)
+		if (position === 0) {
+			setTicketsEl(ticketsEl);
+			setPosition(5);
+		} else {
+			setTicketsEl(state => state.concat(ticketsEl));
+			setPosition(state => state + 5);
+		}
 	}
 
-	const startTicketsEl = [];
-	for (let i = 0; i < 5; i++) {
-		startTicketsEl.push(
-			<li className="tickets-list__item" key={i}>
-				<Ticket ticket={tickets[i]} />
-			</li>
-		);
-	}
+	const filterOut = useCallback((currentTab, currentStops, dirtyTickets) => {
+		function average(array) {
+			return array.reduce((a, b) => a + b) / array.length
+		};
 
-	const [ticketsEl, setTicketsEl] = useState(startTicketsEl);
+		function getMinAndAverage(arr) {
+			return [Math.min.apply(null, arr), average(arr)]
+		}
+		
+		let tickets = dirtyTickets
+			.filter(t => t.segments.every(s => ~currentStops.indexOf(s.stops.length + 1)));
+
+		if (currentStops.length > 0) {
+			const allPrice = tickets.map(t => t.price);
+			const [ticketsPriceMin, ticketsPriceAverage] = getMinAndAverage(allPrice);
+
+			const allDuration = tickets.map(t => t.segments[0].duration);
+			const [ticketsDurationMin, ticketsDurationAverage] = getMinAndAverage(allDuration);
+
+			function getOptimal(a) {
+				if (a.price > ticketsPriceMin
+					&& a.price < ticketsPriceAverage
+					&& a.segments[0].duration > ticketsDurationMin
+					&& a.segments[0].duration < ticketsDurationAverage) {
+					return 1;
+				} else if (a.price < ticketsPriceMin
+					&& a.price > ticketsPriceAverage
+					&& a.segments[0].duration < ticketsDurationMin
+					&& a.segments[0].duration > ticketsDurationAverage) {
+					return -1;
+				}
+				return 0;
+			}
+
+			tickets = tickets.sort((a, b) => {
+				switch (currentTab) {
+					case 0:
+						return a.price - b.price;
+					case 1:
+						return a.segments[0].duration - b.segments[0].duration;
+					default:
+						return getOptimal(a);
+				}
+			});
+		}
+
+		return tickets;
+	}, [])
+
+	const [tickets, setTickets] = useState(filterOut(currentTab, currentStops, dirtyTickets));
 
 	useEffect(() => {
-		const startTicketsEl = [];
-		for (let i = 0; i < 5; i++) {
-			startTicketsEl.push(
-				<li className="tickets-list__item" key={i}>
-					<Ticket ticket={tickets[i]} />
-				</li>
-			);
-		}
-		setTicketsEl(startTicketsEl);
-	}, [currentTab, currentStops]);
+		setTickets(filterOut(currentTab, currentStops, dirtyTickets));
+	}, [currentTab, currentStops, dirtyTickets, filterOut]);
+
+	useEffect(() => {
+		addTickets(0, tickets);
+	}, [tickets]);
 
 	return (
 		<>
@@ -139,7 +170,7 @@ function Tickets({ currentTab, currentStops, dirtyTickets }) {
 
 			<button
 				className="more-tickets"
-				onClick={addMoreTickets}
+				onClick={() => addTickets(position, tickets)}
 			>
 				Показать еще 5 билетов!
 			</button>

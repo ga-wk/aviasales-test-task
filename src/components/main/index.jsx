@@ -55,7 +55,7 @@ function Main() {
     <>
       {isError ? <div>Ошибка {isError}</div>
         : !isLoading ? (
-          <div>Загрузка</div>
+          <div class="loader">Loading...</div>
         ) :
           (
             <div className="page">
