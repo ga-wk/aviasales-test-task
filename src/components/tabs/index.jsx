@@ -12,6 +12,8 @@ function Tabs({ currentTab, setNewTab }) {
       state = numTab;
       return state
     });
+
+    localStorage.setItem('tabs', numTab);
   }
 
   return (

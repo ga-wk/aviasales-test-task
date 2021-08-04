@@ -31,6 +31,8 @@ function Filter({ currentStops, setNewStops }) {
 		tmpStops = tmpStops.sort((a, b) => a - b);
 		setStops(tmpStops);
 		setNewStops(tmpStops);
+
+		localStorage.setItem('stops', tmpStops);
 	}
 
 	return (

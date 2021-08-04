@@ -17,14 +17,16 @@ async function fetchDataGet(url, success, fail) {
 }
 
 function Main() {
-  const [stops, setStops] = useState([3, 4]);
-  const [tab, setTab] = useState(1);
+  console.log();
+  const [stops, setStops] = useState(localStorage.getItem('stops').split(",").map(n => +n) ?? [0, 1, 2, 3, 4]);
+  const [tab, setTab] = useState(+localStorage.getItem('tabs') ?? 0);
 
   const [searchId, setSearchId] = useState(undefined);
   const [tickets, setTickets] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isTry, setIsTry] = useState(0);
   const [isError, setIsError] = useState(undefined);
+
 
   useEffect(() => {
     fetchDataGet(mainConst.getSearchId, (data) => {
@@ -55,7 +57,8 @@ function Main() {
     <>
       {isError ? <div>Ошибка {isError}</div>
         : !isLoading ? (
-          <div class="loader">Loading...</div>
+          // loader taken from https://projects.lukehaas.me/css-loaders/ 
+          <div className="loader">Loading...</div>
         ) :
           (
             <div className="page">
